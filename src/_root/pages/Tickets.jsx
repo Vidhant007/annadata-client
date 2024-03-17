@@ -45,9 +45,9 @@ const Tickets = () => {
       );
       console.log(res);
       if (user.isVolunteer) {
-        getUserTickets();
-      } else {
         getAllTickets();
+      } else {
+        getUserTickets();
       }
     } catch (error) {
       console.log(error);

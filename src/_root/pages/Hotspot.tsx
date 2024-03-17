@@ -6,10 +6,22 @@ import axios from "axios";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Button } from "@/components/ui/button";
+import L from "leaflet";
+import { icons } from "lucide-react";
+
+const markerIcon = new L.Icon({
+  iconUrl: "/pin.png",
+  iconSize: [35, 45],
+});
 
 const Hotspot = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const [isDisaster, setIsDiaster] = useState(true);
+  const [userLocation, setUserLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [ticketData, setTicketData] = useState();
 
   const [viewport, setViewport] = useState({
     latitude: 28.6448,
@@ -34,6 +46,23 @@ const Hotspot = () => {
       setTickets(res.data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          setUserLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
     }
   };
 
@@ -63,6 +92,7 @@ const Hotspot = () => {
     }
   };
   useEffect(() => {
+    getUserLocation();
     if (user.isVolunteer) {
       getTickets();
     }
@@ -103,10 +133,18 @@ const Hotspot = () => {
                     {...{ position: [ticket.latitude, ticket.longitude] }}
                     key={key}
                   >
-                    <Popup>{ticket.mealName}</Popup>
+                    <Popup>{ticket.mealName || ticket.category}</Popup>
                   </Marker>
                 ))}
             </MemoMarkerClusterGroup>
+            <Marker
+              {...{
+                position: [userLocation.latitude, userLocation.longitude],
+                icon: markerIcon,
+              }}
+            >
+              <Popup>You</Popup>
+            </Marker>
           </MapContainer>
         </div>
         <ScrollBar orientation="vertical" />
