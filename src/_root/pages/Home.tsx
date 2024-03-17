@@ -12,10 +12,12 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
+import axios from "axios";
 import { Input } from "@/components/ui/input";
 const Home = () => {
   const [isAvailable, setAvailable] = useState(true);
   const [isVolunteer, setVolunteer] = useState(false);
+  const [events, setEvents] = useState([])
   const organizations = [
     {name:"Building Dreams Foundation",logo:"https://media.licdn.com/dms/image/C5103AQEDJ1mD5KbGYA/profile-displayphoto-shrink_800_800/0/1572984608027?e=2147483647&v=beta&t=0Ru_X20ojFvFNZ0xRfYOIejFLlRQVpAc5aDJkfWfdOU"},
     {name:"Niti Aayog",logo:"https://analyticsindiamag.com/wp-content/uploads/2020/12/NITI-Aayog-Banner.jpg"},
@@ -24,7 +26,22 @@ const Home = () => {
   if (isVolunteer) {
     // TODO: Volunteer screen
   }
-
+  useEffect(()=>{
+    var config = {
+      method: 'get',
+      url: 'http://localhost:8000/api/event/getEvents',
+      headers: { }
+    };
+    
+    axios(config)
+    .then(function (response) {
+      setEvents(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    
+  },[]);
   return (
     <ScrollArea className="h-full">
       <style>
@@ -125,7 +142,39 @@ const Home = () => {
             <p className="font-semibold text-primary">Relief Fund</p>
           </div>
         </div>
+        <div className="flex justify-center">
+          <Drawer>
+          <DrawerTrigger asChild>
 
+          <Button className="font-bold text-xl w-1/2 ">Local Events</Button>
+          </DrawerTrigger>
+          <DrawerContent >
+            <ScrollArea className="max-h-[70vh] overflow-y-auto">
+            <DrawerHeader>
+              <DrawerTitle>Take part in Events Near you</DrawerTitle>
+            </DrawerHeader>
+            {events.map((event,index)=>{
+              return (
+              <div key={index} className="flex p-2">
+                <img className="w-[30%] rounded-md" src={event.imageUrl} alt="" />
+                <div className="text ml-2">
+                  <p className="text-lg text-primary font-medium">{event.name}</p>
+                  <p className="text-slate-600">{event.description}</p>
+                  <p>{event.location}</p>
+                  <p>{event.contact}</p>
+                </div>
+              </div>
+            )
+            })}
+            <DrawerFooter>
+              <DrawerClose asChild>
+                <Button >Close</Button>
+              </DrawerClose>
+          </DrawerFooter>
+          </ScrollArea>
+          </DrawerContent>
+          </Drawer>
+        </div>
         {/* ngos */}
         <p className="text-3xl font-bold ">
           Our <span className="text-primary">Partners</span>
