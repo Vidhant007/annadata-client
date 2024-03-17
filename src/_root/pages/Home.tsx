@@ -2,11 +2,25 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+import { Input } from "@/components/ui/input";
 const Home = () => {
   const [isAvailable, setAvailable] = useState(true);
   const [isVolunteer, setVolunteer] = useState(false);
-
+  const organizations = [
+    {name:"Building Dreams Foundation",logo:"https://media.licdn.com/dms/image/C5103AQEDJ1mD5KbGYA/profile-displayphoto-shrink_800_800/0/1572984608027?e=2147483647&v=beta&t=0Ru_X20ojFvFNZ0xRfYOIejFLlRQVpAc5aDJkfWfdOU"},
+    {name:"Niti Aayog",logo:"https://analyticsindiamag.com/wp-content/uploads/2020/12/NITI-Aayog-Banner.jpg"},
+    {name:"Akshaya Patra Foundation",logo:"https://assets.thehansindia.com/h-upload/2020/09/22/1000604-akshaya-patra-foundation.webp"}
+  ];
   if (isVolunteer) {
     // TODO: Volunteer screen
   }
@@ -43,10 +57,35 @@ const Home = () => {
           Support <span className="text-primary">Us</span>
         </p>
         <div className="flex p-2 justify-between gap-2">
+        <Drawer>
           <div className="bg-white w-full h-28 rounded-md flex flex-col justify-center items-center icon-shadow">
             <img src="/coin.png" alt="" className="w-20 object-contain" />
-            <p className="font-semibold text-primary">Fund Us</p>
+            <DrawerTrigger asChild>
+              <p className="font-semibold text-primary">Fund Us</p>
+            </DrawerTrigger>
+
           </div>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Select Your Donation Amount</DrawerTitle>
+              <DrawerDescription>We are a small platform that relies on donations to cover server costs</DrawerDescription>
+            </DrawerHeader>
+              <div className="flex">
+                <Button className="focus:bg-primary focus:text-white" variant="outline">₹20</Button>
+                <Button className="focus:bg-primary focus:text-white" variant="outline">₹50</Button>
+                <Button className="focus:bg-primary focus:text-white" variant="outline">₹100</Button>
+                <Input className="w-1/3" defaultValue="Custom Amount"></Input>
+              </div>
+            <DrawerFooter>
+              <DrawerClose asChild>
+              <Button>Submit</Button>
+              </DrawerClose>
+              <DrawerClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
+          </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
           <div className="bg-white w-full h-28 rounded-md flex flex-col justify-center items-center icon-shadow">
             <img src="/tree.png" alt="" className="w-20 object-contain" />
             <p className="font-semibold text-primary">Plant Tree</p>
@@ -65,45 +104,44 @@ const Home = () => {
         <p className="text-3xl font-bold ">
           Our <span className="text-primary">Partners</span>
         </p>
-        <div className="w-full h-64 bg-white icon-shadow rounded-md flex flex-col">
+        <Drawer>
+        {organizations.map((org)=>{
+          return <div className="w-full h-64 bg-white icon-shadow rounded-md flex flex-col">
           <img
-            src="/ngo1.jpg"
+            src={org.logo}
             alt=""
             className="w-full h-3/4 object-cover rounded-t-md"
           />
           <div className="w-full flex p-2 px-4 justify-between items-center">
             <p className="font-semibold capitalize text-primary">
-              XYZ Foundation
+              {org.name}
             </p>
-            <Button>Donate</Button>
+            <DrawerTrigger asChild>
+              <Button>Donate</Button>
+            </DrawerTrigger>
           </div>
         </div>
-        <div className="w-full h-64 bg-white icon-shadow rounded-md flex flex-col">
-          <img
-            src="/ngo1.jpg"
-            alt=""
-            className="w-full h-3/4 object-cover rounded-t-md"
-          />
-          <div className="w-full flex p-2 px-4 justify-between items-center">
-            <p className="font-semibold capitalize text-primary">
-              XYZ Foundation
-            </p>
-            <Button>Donate</Button>
-          </div>
-        </div>
-        <div className="w-full h-64 bg-white icon-shadow rounded-md flex flex-col">
-          <img
-            src="/ngo1.jpg"
-            alt=""
-            className="w-full h-3/4 object-cover rounded-t-md"
-          />
-          <div className="w-full flex p-2 px-4 justify-between items-center">
-            <p className="font-semibold capitalize text-primary">
-              XYZ Foundation
-            </p>
-            <Button>Donate</Button>
-          </div>
-        </div>
+        })}
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Select Your Donation Amount</DrawerTitle>
+            </DrawerHeader>
+              <div className="flex">
+                <Button className="focus:bg-primary focus:text-white" variant="outline">₹20</Button>
+                <Button className="focus:bg-primary focus:text-white" variant="outline">₹50</Button>
+                <Button className="focus:bg-primary focus:text-white" variant="outline">₹100</Button>
+                <Input className="w-1/3" defaultValue="Custom Amount"></Input>
+              </div>
+            <DrawerFooter>
+              <DrawerClose asChild>
+              <Button>Submit</Button>
+              </DrawerClose>
+              <DrawerClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
+          </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
       </div>
       <ScrollBar orientation="vertical" />
     </ScrollArea>
