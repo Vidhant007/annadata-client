@@ -5,20 +5,11 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import axios from "axios";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 
 const Hotspot = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const [isDisaster, setIsDiaster] = useState(true);
 
   const [viewport, setViewport] = useState({
     latitude: 28.6448,
@@ -46,8 +37,35 @@ const Hotspot = () => {
     }
   };
 
+  const [mapData, setMapData] = useState();
+
+  const getDisaster = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8000/api/disaster/getDisaster"
+      );
+      console.log(res.data);
+      setMapData(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getHotspots = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8000/api/hotspot/getHotspots"
+      );
+      console.log(res.data);
+      setMapData(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    getTickets();
+    if (user.isVolunteer) {
+      getTickets();
+    }
   }, []);
 
   if (user.isVolunteer) {
@@ -101,11 +119,38 @@ const Hotspot = () => {
       <style>
         {`
             .leaflet-container {
-                height:100vh;
+                height: 100vh;
                 width:100vw;
             }
             `}
       </style>
+      <div className="w-full bg-white flex">
+        <Button
+          className={
+            isDisaster
+              ? "w-full rounded-none border-r  bg-primary text-black"
+              : "w-full rounded-none border-r  bg-white text-black"
+          }
+          onClick={() => {
+            setIsDiaster(true), getDisaster();
+          }}
+        >
+          Disaster
+        </Button>
+        <Button
+          className={
+            isDisaster
+              ? "w-full rounded-none border-r  bg-white text-black"
+              : "w-full rounded-none border-r  bg-primary text-black"
+          }
+          onClick={() => {
+            setIsDiaster(false), getHotspots();
+          }}
+        >
+          Hotspots
+        </Button>
+      </div>
+
       <div className="w-full h-full">
         <MapContainer
           {...{ center: position, zoom: 16, scrollWheelZoom: false }}
@@ -117,9 +162,17 @@ const Hotspot = () => {
               url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             }}
           />
-        </MapContainer>
 
-        {/* TODO: Map over the responses */}
+          {mapData &&
+            mapData.map((ticket: any, key: any) => (
+              <Marker
+                {...{ position: [ticket.latitude, ticket.longitude] }}
+                key={key}
+              >
+                <Popup>{ticket.disasterType || ticket.name}</Popup>
+              </Marker>
+            ))}
+        </MapContainer>
       </div>
       <ScrollBar orientation="vertical" />
     </ScrollArea>

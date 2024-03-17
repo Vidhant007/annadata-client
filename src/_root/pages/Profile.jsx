@@ -21,7 +21,7 @@ const Profile = () => {
           <p className="text-muted-foreground text-sm">{user.email}</p>
         </div>
 
-        <Link to="/rewards">
+        <Link to="/rewards" className="w-full">
           <div className="w-full bg-primary shadow-md h-32 rounded-md p-4 text-white flex">
             <div className="w-full">
               <p className="text-xl">Donor Card</p>

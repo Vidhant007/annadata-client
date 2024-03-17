@@ -6,6 +6,7 @@ import Home from "@/_root/pages/Home";
 import Hotspot from "@/_root/pages/Hotspot";
 import PickupDetails from "@/_root/pages/PickupDetails.jsx";
 import Profile from "@/_root/pages/Profile.jsx";
+import Tickets from "@/_root/pages/Tickets.jsx";
 import Rewards from "@/_root/pages/Rewards.jsx";
 import EntryScreen from "@/components/EntryScreen";
 import ErrorPage from "@/error-page";
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: "/rewards",
         element: <Rewards />,
+      },
+      {
+        path: "/tickets",
+        element: <Tickets />,
       },
     ],
   },
