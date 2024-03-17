@@ -86,10 +86,36 @@ const Home = () => {
           </DrawerFooter>
           </DrawerContent>
         </Drawer>
+        <Drawer>
           <div className="bg-white w-full h-28 rounded-md flex flex-col justify-center items-center icon-shadow">
             <img src="/tree.png" alt="" className="w-20 object-contain" />
-            <p className="font-semibold text-primary">Plant Tree</p>
+            <DrawerTrigger asChild>
+              <p className="font-semibold text-primary">Plant Tree</p>
+            </DrawerTrigger>
           </div>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Help us move towards a greener India</DrawerTitle>
+              <DrawerDescription>Join the movement by donating trees to our organization</DrawerDescription>
+            </DrawerHeader>
+            <img src="/tree.png" alt="" className="w-full object-contain" />
+            <p className="text-center text-3xl font-bold"><span className="text-primary">2,01,402</span> Trees Planted</p>
+              <div className="flex">
+                <Button className="focus:bg-primary focus:text-white" variant="outline">1 Tree</Button>
+                <Button className="focus:bg-primary focus:text-white" variant="outline">5 Trees</Button>
+                <Button className="focus:bg-primary focus:text-white" variant="outline">100 Trees</Button>
+                <Input className="w-1/3" defaultValue="Custom Amount"></Input>
+              </div>
+            <DrawerFooter>
+              <DrawerClose asChild>
+              <Button>Submit</Button>
+              </DrawerClose>
+              <DrawerClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
+          </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
           <div className="bg-white w-full h-28 rounded-md flex flex-col justify-center items-center icon-shadow">
             <img
               src="/flooded-house.png"
