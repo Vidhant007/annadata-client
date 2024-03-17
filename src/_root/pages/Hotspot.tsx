@@ -14,6 +14,16 @@ const markerIcon = new L.Icon({
   iconSize: [35, 45],
 });
 
+const disasterIcon = new L.Icon({
+  iconUrl: "/cross.png",
+  iconSize: [35, 35],
+});
+
+const NGOIcon = new L.Icon({
+  iconUrl: "/circle.png",
+  iconSize: [35, 35],
+});
+
 const Hotspot = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const [isDisaster, setIsDiaster] = useState(true);
@@ -204,7 +214,10 @@ const Hotspot = () => {
           {mapData &&
             mapData.map((ticket: any, key: any) => (
               <Marker
-                {...{ position: [ticket.latitude, ticket.longitude] }}
+                {...{
+                  position: [ticket.latitude, ticket.longitude],
+                  icon: isDisaster ? disasterIcon : NGOIcon,
+                }}
                 key={key}
               >
                 <Popup>{ticket.disasterType || ticket.name}</Popup>
