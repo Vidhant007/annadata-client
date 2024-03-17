@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface Credentials {
   email: string;
@@ -9,7 +10,10 @@ interface Credentials {
 }
 
 const SignIn = () => {
+  const navigate = useNavigate();
+
   const [creds, setCreds] = useState<Credentials>({ email: "", password: "" });
+  const [isVolunteer, setIsVolunteer] = useState(false);
 
   const onType = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCreds((prev) => ({
@@ -18,8 +22,38 @@ const SignIn = () => {
     }));
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     // TODO: Send auth request
+
+    try {
+      let response;
+
+      if (isVolunteer) {
+        response = await axios.post(
+          "http://localhost:8000/api/user/loginVolunteer",
+          creds
+        );
+      } else {
+        response = await axios.post(
+          "http://localhost:8000/api/user/loginDonor",
+          creds
+        );
+      }
+
+      console.log(response.data);
+
+      if (response.data?.organisation) {
+        response.data["isVolunteer"] = true;
+        localStorage.setItem("user", JSON.stringify(response.data));
+        navigate("/hotspot-areas");
+      } else {
+        response.data["isVolunteer"] = false;
+        localStorage.setItem("user", JSON.stringify(response.data));
+        navigate("/home");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="w-full flex flex-col">
@@ -48,6 +82,18 @@ const SignIn = () => {
           value={creds.password}
           onChange={onType}
         />
+        <div className="flex items-center gap-2">
+          <Input
+            id="isVolunter"
+            type="checkbox"
+            name="isVolunteer"
+            className="w-5"
+            onChange={() => setIsVolunteer(!isVolunteer)}
+          />
+          <label htmlFor="isVolunter">
+            Are you a volunteer? Sign up your organisation
+          </label>
+        </div>
         <Button className="py-6 text-lg hover:bg-secondary" onClick={onSubmit}>
           Sign in
         </Button>

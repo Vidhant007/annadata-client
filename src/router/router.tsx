@@ -1,11 +1,12 @@
 import AuthLayout from "@/_auth/AuthLayout";
 import SignIn from "@/_auth/forms/SignIn";
-import SignUp from "@/_auth/forms/SignUp";
+import SignUp from "@/_auth/forms/SignUp.jsx";
 import RootLayout from "@/_root/RootLayout";
 import Home from "@/_root/pages/Home";
 import Hotspot from "@/_root/pages/Hotspot";
-import PickupDetails from "@/_root/pages/PickupDetails";
-import Profile from "@/_root/pages/Profile";
+import PickupDetails from "@/_root/pages/PickupDetails.jsx";
+import Profile from "@/_root/pages/Profile.jsx";
+import Rewards from "@/_root/pages/Rewards.jsx";
 import EntryScreen from "@/components/EntryScreen";
 import ErrorPage from "@/error-page";
 import { createBrowserRouter } from "react-router-dom";
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "/pickupDetails",
         element: <PickupDetails />,
+      },
+      {
+        path: "/rewards",
+        element: <Rewards />,
       },
     ],
   },

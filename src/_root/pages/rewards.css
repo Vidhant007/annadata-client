@@ -1,0 +1,25 @@
+.cont{
+    display: flex;
+    flex-wrap: wrap;
+}
+.rewards .head{
+    font-size: 4rem;
+    font-weight: 700;
+    color: #01BF9D;
+    line-height: 80%;
+    margin-bottom: 2vh;
+}
+.rewards .pt{
+    color: black;
+}
+
+.rewards .rewarditem{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    width: 45vw;
+    height: auto;
+    border-radius: 20px;
+    
+}
+.rewarditem img{
+    width: 100%;
+}

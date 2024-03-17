@@ -2,37 +2,75 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-interface Credentials {
-  email: string;
-  password: string;
-  phone: string;
-  isVolunteer: boolean;
-  organisation?: string;
-}
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-  const [creds, setCreds] = useState<Credentials>({
+  const navigate = useNavigate();
+
+  const [creds, setCreds] = useState({
     email: "",
+    username: "",
     password: "",
     phone: "",
     isVolunteer: false,
     organisation: "",
   });
 
-  const onType = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onType = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
     setCreds((prevCreds) => ({
       ...prevCreds,
       [name]: newValue,
     }));
-
-    console.log(creds);
   };
 
-  const onSubmit = () => {
-    // TODO: Handle registration
+  const onSubmit = async () => {
+    try {
+      console.log(creds);
+      let response;
+      if (creds.isVolunteer) {
+        // If user is a volunteer, hit the volunteer registration endpoint
+        response = await axios.post(
+          "http://localhost:8000/api/user/registerVolunteer",
+          creds
+        );
+      } else {
+        // If user is not a volunteer, hit the regular registration endpoint
+        response = await axios.post(
+          "http://localhost:8000/api/user/registerDonor",
+          creds
+        );
+      }
+      console.log(response.data);
+      const { username, _id, email, points } = response.data;
+
+      // Add isVolunteer field to user information
+      const userInfo = {
+        username,
+        _id,
+        email,
+        points,
+        isVolunteer: creds.isVolunteer,
+      };
+
+      // Store user information in local storage
+      localStorage.setItem("user", JSON.stringify(userInfo));
+
+      // Store token in local storage
+      if (creds.isVolunteer) {
+        navigate("/hotspot-areas");
+      }
+      navigate("/home");
+
+      // Optionally, you can redirect the user to a different page after successful registration
+      // window.location.href = '/dashboard';
+    } catch (error) {
+      console.error("Registration failed:", error);
+      // Handle registration error
+    }
   };
 
   return (
@@ -50,6 +88,14 @@ const SignUp = () => {
           placeholder="Email"
           className="focus:!ring-0 focus:!ring-offset-0 py-6 border-secondary transition-shadow focus:shadow-primary focus:shadow-md"
           value={creds.email}
+          onChange={onType}
+        />
+        <Input
+          type="username"
+          name="username"
+          placeholder="Username"
+          className="focus:!ring-0 focus:!ring-offset-0 py-6 border-secondary transition-shadow focus:shadow-primary focus:shadow-md"
+          value={creds.username}
           onChange={onType}
         />
         <Input
