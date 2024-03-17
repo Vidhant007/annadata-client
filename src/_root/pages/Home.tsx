@@ -21,13 +21,13 @@ const Home = () => {
       <div className="w-full h-full flex flex-col gap-4 p-3">
         {/* request button */}
         <Link to="/pickupDetails">
-          <div className="w-full flex flex-col bg-secondary rounded-md transition-all">
+          <div className="w-full flex flex-col bg-secondary rounded-xl transition-all">
             <Button
               disabled={!isAvailable}
               className="h-32 bg-primary focus:bg-secondary justify-between"
             >
-              <img src="/pickup.png" alt="" className="object-contain w-32" />
-              <p className="text-2xl flex-1">Request Pickup</p>
+              <img src="/pickup.png" alt="" className="object-contain w-32 scale-125" />
+              <p className="text-3xl font-semibold flex-1">Request Pickup</p>
             </Button>
             {/* {!isAvailable && (
             <p className="p-3 rounded-md font-semibold">

@@ -1,0 +1,7 @@
+.nav svg{
+    height: 40px;
+    fill: black;
+}
+.nav .active{
+    fill: #01BF9D;
+}
